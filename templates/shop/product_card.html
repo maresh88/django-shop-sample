@@ -1,0 +1,37 @@
+<div class="card">
+
+    <!--Card image-->
+    <div class="view overlay">
+        <img src="{{ product.image.url }}" class="card-img-top"
+             alt="">
+        <a href={{ product.get_absolute_url }}>
+            <div class="mask rgba-white-slight"></div>
+        </a>
+    </div>
+    <!--Card image-->
+
+    <!--Card content-->
+    <div class="card-body text-center">
+        <!--Category & Title-->
+        <a href="" class="grey-text">
+            <h5>{{ product.category }}</h5>
+        </a>
+        <h5>
+            <strong>
+                <a href="{{ product.get_absolute_url }}" class="dark-grey-text">{{ product.name }}
+                    <span class="badge badge-pill danger-color">{{ product.get_label_display }}</span>
+                </a>
+            </strong>
+        </h5>
+
+        <h4 class="font-weight-bold blue-text">
+            {% if product.discount_price %}
+                <span class="text-danger"><strong><del>{{ product.price }}$</del></strong></span>
+                <strong>{{ product.discount_price }}</strong>
+            {% else %}
+                <strong>{{ product.price }}</strong>
+            {% endif %}
+        </h4>
+    </div>
+    <!--Card content-->
+</div>
