@@ -14,6 +14,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('shop:products_by_category', kwargs={'category_slug': self.slug})
+
 
 class Product(models.Model):
     LABEL_CHOICES = (
