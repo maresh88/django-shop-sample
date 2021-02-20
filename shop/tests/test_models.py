@@ -4,15 +4,6 @@ from test_plus.test import TestCase
 from shop.models import Category, Product
 
 
-class DummyGenerator(TestCase):
-
-    def dummy_user(self):
-        user = User.objects.create(username='dummy')
-        user.set_password('123456789')
-        user.save()
-        return user
-
-
 class TestCategoryModel(TestCase):
 
     def setUp(self):
@@ -27,8 +18,7 @@ class TestCategoryModel(TestCase):
 class TestProductModel(TestCase):
 
     def setUp(self):
-        user = DummyGenerator()
-        user = user.dummy_user()
+        user = self.make_user('user')
         category = Category.objects.create(name='test', slug='test')
         self.dummy_product = Product.objects.create(
             category=category,
