@@ -1,6 +1,7 @@
-from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from .models import Product, Category
+from django.views.generic.list import ListView
+
+from .models import Category, Product
 
 
 class AvailabilityMixin:

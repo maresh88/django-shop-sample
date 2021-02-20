@@ -31,7 +31,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='images/', default='images/default.jpg')
     is_available = models.BooleanField(default=True)
     is_on_stock = models.BooleanField(default=True)
     created_by = models.ForeignKey(User, related_name='created_products', on_delete=models.DO_NOTHING)

@@ -1,6 +1,7 @@
 from test_plus.test import TestCase
-from django.urls import reverse
+
 from shop.models import Category, Product
+
 from .test_models import DummyGenerator
 
 
