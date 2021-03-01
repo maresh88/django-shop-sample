@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
     # apps
     'shop',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# Cart settings
+CART_SESSION_ID = 'cart'
