@@ -47,19 +47,22 @@
                         <div style="height: 100px;">
                             <p class="h-100">{{ product.description|truncatechars_html:200 }}</p>
                         </div>
-
-
+                        {% if product.id|slugify not in cart.cart.keys %}
+                            <button class="btn btn-primary btn-md my-0 p" type="submit" onclick="addToCart({{ product.id }})">Add to cart
+                                <i class="fas fa-shopping-cart ml-1"></i>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary btn-md my-0 p" type="submit" disabled>Already added
+                                <i class="fas fa-shopping-cart ml-1"></i>
+                            </button>
+                        {% endif %}
                     </div>
                     <!--Content-->
-
                 </div>
                 <!--Grid column-->
-
             </div>
             <!--Grid row-->
-
             <hr>
-
             <!--Grid row-->
             <div class="row d-flex justify-content-center wow fadeIn">
 
@@ -116,3 +119,34 @@
     </main>
     <!--Main layout-->
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+        function addToCart(product_id) {
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': "{{ csrf_token }}"
+            }
+            let url = window.location.origin + '/cart/add/' + product_id + '/'
+
+            let data = new FormData();
+            data.append('product_id', product_id)
+
+            return fetch(url, {
+                method: 'POST',
+                body: data,
+                headers: headers,
+                mode: 'same-origin',
+            }).then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    }
+                    return response.json().then(error => {
+                        const e = new Error('Something goes wrong')
+                    })
+
+                }
+            )
+        }
+    </script>
+{% endblock %}
