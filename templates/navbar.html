@@ -18,7 +18,7 @@
             <!-- Right -->
             <ul class="navbar-nav nav-flex-icons">
                 <li class="nav-item">
-                    <a href="#" class="nav-link waves-effect">
+                    <a href="{% url "cart:cart_detail" %}" class="nav-link waves-effect">
                         {% with cart|length as total_items %}
                             <span id="total-cart-qty" class="badge red z-depth-1 mr-1">{{ total_items }}</span>
                         {% endwith %}

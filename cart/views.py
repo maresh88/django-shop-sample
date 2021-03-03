@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.http import JsonResponse
 from .cart import Cart
 from shop.models import Product
@@ -11,3 +11,8 @@ class CartAdd(View):
         product = get_object_or_404(Product, id=product_id)
         cart.add(product=product)
         return JsonResponse({'total_cart_qty': cart.__len__()})
+
+
+class CartDetail(TemplateView):
+    template_name = 'cart/cart_detail.html'
+

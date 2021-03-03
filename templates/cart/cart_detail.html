@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}
+    <title>Your Cart</title>
+{% endblock title %}
+
+{% block content %}
+
+    <main class="mt-5 pt-4">
+        <div class="container mt-5">
+            <div class="table-responsive">
+                <h2>Your Cart:</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Unit Price</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item  in cart %}
+                        {% with item.product as product %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    {% if product.image.url %}
+                                        <a href="{{ product.image.url }}">
+                                            <img src="{% thumbnail product.image 50x0 %}">
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn-sm btn-outline border-0 mr-1" aria-hidden="true"><i
+                                            class="fas fa-minus" aria-hidden="true"></i></button>
+                                    {{ item.quantity }}
+                                    <button type="submit" class="btn-sm btn-outline border-0 ml-1" aria-hidden="true"><i
+                                            class="fas fa-plus" aria-hidden="true"></i></button>
+                                </td>
+
+                                <td>${{ item.price }}</td>
+                                <td>${{ item.total_price }}
+
+                                <span>
+                                    <button style="border: none;
+                                      background-color: transparent;
+                                      outline: none;"><i class="fas fa-trash ml-3"></i>
+                                    </button>
+                                </span>
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="4"></td>
+                            <td><b>Your cart is empty</b></td>
+                        </tr>
+
+                    {% endfor %}
+                    <tr>
+                        <td><b>Total:</b></td>
+                        <td colspan="3"></td>
+                        <td><b>${{ cart.get_total_price }}</b></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+                <p class="text-right">
+                    <a href="{% url "shop:homepage" %}" class="btn btn-secondary">
+                        Continue shopping</a>
+                    {% if cart|length %}
+                        <a href="#" class="btn btn-primary">Checkout</a>
+                        </p>
+                    {% endif %}
+            </div>
+        </div>
+    </main>
+
+{% endblock content %}
+
+  
+

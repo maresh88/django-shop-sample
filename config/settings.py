@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # libs
     'debug_toolbar',
+    'easy_thumbnails',
 
     # apps
     'shop',
