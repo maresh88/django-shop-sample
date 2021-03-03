@@ -48,7 +48,7 @@
                             <p class="h-100">{{ product.description|truncatechars_html:200 }}</p>
                         </div>
                         {% if product.id|slugify not in cart.cart.keys %}
-                            <button class="btn btn-primary btn-md my-0 p" type="submit" onclick="addToCart({{ product.id }})">Add to cart
+                            <button id="add_to_cart_btn" class="btn btn-primary btn-md my-0 p" type="submit" onclick="addToCart({{ product.id }})">Add to cart
                                 <i class="fas fa-shopping-cart ml-1"></i>
                             </button>
                         {% else %}
@@ -139,7 +139,13 @@
                 mode: 'same-origin',
             }).then(response => {
                     if (response.ok) {
-                        return response.json()
+                        return response.json().then(function (data){
+                            document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+                            document.querySelector('#add_to_cart_btn').setAttribute("disabled", "disabled")
+                            document.querySelector('#add_to_cart_btn').innerHTML = 'Already added' +
+                                '<i class="fas fa-shopping-cart ml-1"></i>'
+
+                        })
                     }
                     return response.json().then(error => {
                         const e = new Error('Something goes wrong')

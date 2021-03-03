@@ -20,7 +20,7 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link waves-effect">
                         {% with cart|length as total_items %}
-                            <span class="badge red z-depth-1 mr-1">{{ total_items }}</span>
+                            <span id="total-cart-qty" class="badge red z-depth-1 mr-1">{{ total_items }}</span>
                         {% endwith %}
                         <span class="clearfix d-none d-sm-inline-block"> Cart </span>
                     </a>

@@ -10,4 +10,4 @@ class CartAdd(View):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
         cart.add(product=product)
-        return JsonResponse({'added': 'OK'})
+        return JsonResponse({'total_cart_qty': cart.__len__()})
