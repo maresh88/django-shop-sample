@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
     {{ product.name }}
 {% endblock title %}
@@ -48,7 +48,7 @@
                             <p class="h-100">{{ product.description|truncatechars_html:200 }}</p>
                         </div>
                         {% if product.id|slugify not in cart.cart.keys %}
-                            <button id="add_to_cart_btn" class="btn btn-primary btn-md my-0 p" type="submit" onclick="addToCart({{ product.id }})">Add to cart
+                            <button id="add_to_cart_btn" class="btn btn-primary btn-md my-0 p" type="submit">Add to cart
                                 <i class="fas fa-shopping-cart ml-1"></i>
                             </button>
                         {% else %}
@@ -121,38 +121,26 @@
 {% endblock content %}
 
 {% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/shop/fetch-request.js' %}"></script>
     <script>
-        function addToCart(product_id) {
-            const headers = {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': "{{ csrf_token }}"
-            }
-            let url = window.location.origin + '/cart/add/' + product_id + '/'
+        let url = window.location.origin + '/cart/add/' + {{ product.id }} + '/'
+        let data = new FormData()
+        data.append('product_id', {{ product.id }})
 
-            let data = new FormData();
-            data.append('product_id', product_id)
-
-            return fetch(url, {
-                method: 'POST',
-                body: data,
-                headers: headers,
-                mode: 'same-origin',
-            }).then(response => {
-                    if (response.ok) {
-                        return response.json().then(function (data){
-                            document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
-                            document.querySelector('#add_to_cart_btn').setAttribute("disabled", "disabled")
-                            document.querySelector('#add_to_cart_btn').innerHTML = 'Already added' +
-                                '<i class="fas fa-shopping-cart ml-1"></i>'
-
-                        })
-                    }
-                    return response.json().then(error => {
-                        const e = new Error('Something goes wrong')
-                    })
-
-                }
-            )
+        const headers = {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': "{{ csrf_token }}"
+        }
+        let a = document.querySelector('#add_to_cart_btn')
+        a.onclick = function (event) {
+            sendRequest('POST', url, data, headers)
+                .then(function (data) {
+                    document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+                    document.querySelector('#add_to_cart_btn').setAttribute("disabled", "disabled")
+                    document.querySelector('#add_to_cart_btn').innerHTML = 'Already added' +
+                        '<i class="fas fa-shopping-cart ml-1"></i>'
+                })
+                .catch(err => console.log(err))
         }
     </script>
 {% endblock %}

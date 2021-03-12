@@ -16,3 +16,20 @@ class CartAdd(View):
 class CartDetail(TemplateView):
     template_name = 'cart/cart_detail.html'
 
+
+class CartRemoveOneItem(View):
+    def post(self, request, product_id):
+        cart = Cart(request)
+        product = get_object_or_404(Product, id=product_id)
+        cart.remove_one_item(product)
+        return JsonResponse({
+            'total_cart_qty': cart.__len__(),
+            })
+
+
+class CartRemove(View):
+    def post(self, request, product_id):
+        cart = Cart(request)
+        product = get_object_or_404(Product, id=product_id)
+        cart.remove(product)
+        return JsonResponse({'total_cart_qty': cart.__len__()})

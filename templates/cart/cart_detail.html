@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load thumbnail %}
 
 {% block title %}
@@ -24,8 +25,8 @@
                     <tbody>
                     {% for item  in cart %}
                         {% with item.product as product %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
+                            <tr data-index={{ product.id }}>
+                                <th data-index={{ product.id }} scope="row">{{ forloop.counter }}</th>
                                 <td>
                                     {% if product.image.url %}
                                         <a href="{{ product.image.url }}">
@@ -35,11 +36,11 @@
                                     <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                                 </td>
                                 <td>
-                                    <button type="submit" class="btn-sm btn-outline border-0 mr-1" aria-hidden="true"><i
-                                            class="fas fa-minus" aria-hidden="true"></i></button>
-                                    {{ item.quantity }}
-                                    <button type="submit" class="btn-sm btn-outline border-0 ml-1" aria-hidden="true"><i
-                                            class="fas fa-plus" aria-hidden="true"></i></button>
+                                    <button id="remove-product-btn" type="submit" class="btn-sm btn-outline border-0 mr-1 remove-btn" aria-hidden="true" data-index={{ product.id }}><i
+                                            class="fas fa-minus" aria-hidden="true" ></i></button>
+                                    <span class="product-qty">{{ item.quantity }}</span>
+                                    <button id="add-product-btn" type="submit" class="btn-sm btn-outline border-0 ml-1 add-btn" aria-hidden="true" data-index={{ product.id }}><i
+                                            class="fas fa-plus " aria-hidden="true" data-index={{ product.id }}></i></button>
                                 </td>
 
                                 <td>${{ item.price }}</td>
@@ -82,6 +83,61 @@
     </main>
 
 {% endblock content %}
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/shop/fetch-request.js' %}"></script>
+    <script>
+        const headers = {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': "{{ csrf_token }}"
+        }
+
+        document.querySelectorAll('.remove-btn').forEach(function (item) {
+            item.addEventListener('click', function () {
+            let product_id = this.dataset.index
+            let remove_one_item_url = window.location.origin + '/cart/remove_one_item/' + product_id + '/'
+            let remove_product_url = window.location.origin + '/cart/remove/' + product_id + '/'
+            let product_qty = item.nextElementSibling.textContent
+
+            if (product_qty <= 1) {
+                sendRequest('POST', remove_product_url, {'product_id': product_id}, headers)
+                .then(function (data) {
+                    item.parentElement.parentElement.remove()
+                    })
+                .catch(err => console.log(err))
+            } else {
+                sendRequest('POST', remove_one_item_url, {'product_id': product_id}, headers)
+                .then(function (data) {
+                    item.nextElementSibling.textContent = parseInt(item.nextElementSibling.textContent) - 1
+                    })
+                .catch(err => console.log(err))
+
+            }
+
+        })
+        })
+
+
+        document.querySelectorAll('.add-btn').forEach(function (item) {
+            item.addEventListener('click', function () {
+            let product_id = this.dataset.index
+            let add_item_url = window.location.origin + '/cart/add/' + product_id + '/'
+
+            sendRequest('POST', add_item_url, {'product_id': product_id}, headers)
+            .then(function (data) {
+                console.log(item)
+                item.previousElementSibling.textContent = parseInt(item.previousElementSibling.textContent) + 1
+                document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+            })
+            .catch(err => console.log(err))
+        })
+            }
+
+        )
+
+
+
+    </script>
+{% endblock %}
 
   
 
