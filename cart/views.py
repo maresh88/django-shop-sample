@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import View, TemplateView
 from django.http import JsonResponse
@@ -10,7 +12,12 @@ class CartAdd(View):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
         cart.add(product=product)
-        return JsonResponse({'total_cart_qty': cart.__len__()})
+        product_subtotal = cart.cart[str(product_id)]['quantity'] * Decimal(cart.cart[str(product_id)]['price'])
+        return JsonResponse({
+            'total_cart_qty': cart.__len__(),
+            'subtotal': product_subtotal,
+            'cart_total': cart.get_total_price()
+        })
 
 
 class CartDetail(TemplateView):
@@ -22,9 +29,12 @@ class CartRemoveOneItem(View):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
         cart.remove_one_item(product)
+        product_subtotal = cart.cart[str(product_id)]['quantity'] * Decimal(cart.cart[str(product_id)]['price'])
         return JsonResponse({
             'total_cart_qty': cart.__len__(),
-            })
+            'cart_total': cart.get_total_price(),
+            'subtotal': product_subtotal,
+        })
 
 
 class CartRemove(View):
@@ -32,4 +42,7 @@ class CartRemove(View):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
         cart.remove(product)
-        return JsonResponse({'total_cart_qty': cart.__len__()})
+        return JsonResponse({
+            'total_cart_qty': cart.__len__(),
+            'cart_total': cart.get_total_price()
+        })

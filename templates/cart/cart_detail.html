@@ -44,14 +44,15 @@
                                 </td>
 
                                 <td>${{ item.price }}</td>
-                                <td>${{ item.total_price }}
-
-                                <span>
-                                    <button style="border: none;
+                                <td class="product-subtotal">${{ item.total_price }}</td>
+                                <td><span>
+                                    <button data-index={{ product.id }} class="remove-btn-can" style="border: none;
                                       background-color: transparent;
                                       outline: none;"><i class="fas fa-trash ml-3"></i>
                                     </button>
                                 </span>
+
+
                                 </td>
                             </tr>
                         {% endwith %}
@@ -65,7 +66,7 @@
                     <tr>
                         <td><b>Total:</b></td>
                         <td colspan="3"></td>
-                        <td><b>${{ cart.get_total_price }}</b></td>
+                        <td id="cart-total"><b>${{ cart.get_total_price }}</b></td>
                     </tr>
 
                     </tbody>
@@ -91,6 +92,8 @@
             'X-CSRFToken': "{{ csrf_token }}"
         }
 
+        // this button removes 1pc of product from the cart
+        // if the number of products after deletion is zero, it completely removes the product from the cart
         document.querySelectorAll('.remove-btn').forEach(function (item) {
             item.addEventListener('click', function () {
             let product_id = this.dataset.index
@@ -102,12 +105,18 @@
                 sendRequest('POST', remove_product_url, {'product_id': product_id}, headers)
                 .then(function (data) {
                     item.parentElement.parentElement.remove()
+                    document.querySelector('#cart-total').innerHTML = '$' + data.cart_total
+                    document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+
                     })
                 .catch(err => console.log(err))
             } else {
                 sendRequest('POST', remove_one_item_url, {'product_id': product_id}, headers)
                 .then(function (data) {
                     item.nextElementSibling.textContent = parseInt(item.nextElementSibling.textContent) - 1
+                    document.querySelector('#cart-total').innerHTML = '$' + data.cart_total
+                    document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+                    item.closest('tr').querySelector('.product-subtotal').innerHTML = '$' + data.subtotal
                     })
                 .catch(err => console.log(err))
 
@@ -116,7 +125,7 @@
         })
         })
 
-
+        // this button adds 1pc of product to the cart
         document.querySelectorAll('.add-btn').forEach(function (item) {
             item.addEventListener('click', function () {
             let product_id = this.dataset.index
@@ -127,6 +136,9 @@
                 console.log(item)
                 item.previousElementSibling.textContent = parseInt(item.previousElementSibling.textContent) + 1
                 document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+                item.closest('tr').querySelector('.product-subtotal').innerHTML = '$' + data.subtotal
+                document.querySelector('#cart-total').innerHTML = '$' + data.cart_total
+                console.log(data.cart_total)
             })
             .catch(err => console.log(err))
         })
@@ -134,6 +146,24 @@
 
         )
 
+        // removing product from the cart with all its pc's
+        document.querySelectorAll('.remove-btn-can').forEach(function (item) {
+            item.addEventListener('click', function () {
+                let product_id = this.dataset.index
+                let remove_product_url = window.location.origin + '/cart/remove/' + product_id + '/'
+
+                sendRequest('POST', remove_product_url, {'product_id': product_id}, headers)
+                    .then(function (data) {
+                        item.closest('tr').remove()
+                        document.querySelector('#cart-total').innerHTML = '$' + data.cart_total
+                        document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
+
+                    })
+                    .catch(err => console.log(err))
+
+
+            })
+        })
 
 
     </script>
