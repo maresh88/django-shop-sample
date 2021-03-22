@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 from django.shortcuts import get_object_or_404
@@ -8,11 +9,13 @@ from shop.models import Product
 
 
 class CartAdd(View):
-    def post(self, request, product_id):
+    def post(self, request):
+        body_data = json.loads(request.body.decode('utf-8'))
+        print(body_data)
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=body_data.get('product_id'))
         cart.add(product=product)
-        product_subtotal = cart.cart[str(product_id)]['quantity'] * Decimal(cart.cart[str(product_id)]['price'])
+        product_subtotal = cart.cart[str(product.id)]['quantity'] * Decimal(cart.cart[str(product.id)]['price'])
         return JsonResponse({
             'total_cart_qty': cart.__len__(),
             'subtotal': product_subtotal,
@@ -25,11 +28,12 @@ class CartDetail(TemplateView):
 
 
 class CartRemoveOneItem(View):
-    def post(self, request, product_id):
+    def post(self, request):
+        body_data = json.loads(request.body.decode('utf-8'))
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=body_data.get('product_id'))
         cart.remove_one_item(product)
-        product_subtotal = cart.cart[str(product_id)]['quantity'] * Decimal(cart.cart[str(product_id)]['price'])
+        product_subtotal = cart.cart[str(product.id)]['quantity'] * Decimal(cart.cart[str(product.id)]['price'])
         return JsonResponse({
             'total_cart_qty': cart.__len__(),
             'cart_total': cart.get_total_price(),
@@ -38,9 +42,10 @@ class CartRemoveOneItem(View):
 
 
 class CartRemove(View):
-    def post(self, request, product_id):
+    def post(self, request):
+        body_data = json.loads(request.body.decode('utf-8'))
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=body_data.get('product_id'))
         cart.remove(product)
         return JsonResponse({
             'total_cart_qty': cart.__len__(),

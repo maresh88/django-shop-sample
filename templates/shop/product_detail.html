@@ -123,9 +123,7 @@
 {% block extra_js %}
     <script type="text/javascript" src="{% static 'js/shop/fetch-request.js' %}"></script>
     <script>
-        let url = window.location.origin + '/cart/add/' + {{ product.id }} + '/'
-        let data = new FormData()
-        data.append('product_id', {{ product.id }})
+        let url = "{% url 'cart:add_to_cart' %}"
 
         const headers = {
             'Content-Type': 'application/json',
@@ -133,7 +131,7 @@
         }
         let a = document.querySelector('#add_to_cart_btn')
         a.onclick = function (event) {
-            sendRequest('POST', url, data, headers)
+            sendRequest('POST', url, {'product_id': {{ product.id }}}, headers)
                 .then(function (data) {
                     document.querySelector('#total-cart-qty').innerHTML = data.total_cart_qty
                     document.querySelector('#add_to_cart_btn').setAttribute("disabled", "disabled")

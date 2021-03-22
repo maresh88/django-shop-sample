@@ -97,8 +97,8 @@
         document.querySelectorAll('.remove-btn').forEach(function (item) {
             item.addEventListener('click', function () {
             let product_id = this.dataset.index
-            let remove_one_item_url = window.location.origin + '/cart/remove_one_item/' + product_id + '/'
-            let remove_product_url = window.location.origin + '/cart/remove/' + product_id + '/'
+            let remove_one_item_url = "{% url 'cart:cart_remove_one_item' %}"
+            let remove_product_url = "{% url 'cart:cart_remove' %}"
             let product_qty = item.nextElementSibling.textContent
 
             if (product_qty <= 1) {
@@ -129,7 +129,7 @@
         document.querySelectorAll('.add-btn').forEach(function (item) {
             item.addEventListener('click', function () {
             let product_id = this.dataset.index
-            let add_item_url = window.location.origin + '/cart/add/' + product_id + '/'
+            let add_item_url = "{% url 'cart:add_to_cart' %}"
 
             sendRequest('POST', add_item_url, {'product_id': product_id}, headers)
             .then(function (data) {
@@ -150,7 +150,7 @@
         document.querySelectorAll('.remove-btn-can').forEach(function (item) {
             item.addEventListener('click', function () {
                 let product_id = this.dataset.index
-                let remove_product_url = window.location.origin + '/cart/remove/' + product_id + '/'
+                let remove_product_url = "{% url 'cart:cart_remove' %}"
 
                 sendRequest('POST', remove_product_url, {'product_id': product_id}, headers)
                     .then(function (data) {
