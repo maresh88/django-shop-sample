@@ -5,6 +5,10 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # allauth
+    path('accounts/', include('allauth.urls')),
+
+    # apps
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls', namespace='cart')),
     path('', include('shop.urls', namespace='shop')),
