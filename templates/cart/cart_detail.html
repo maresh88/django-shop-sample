@@ -76,7 +76,7 @@
                     <a href="{% url "shop:homepage" %}" class="btn btn-secondary">
                         Continue shopping</a>
                     {% if cart|length %}
-                        <a href="#" class="btn btn-primary">Checkout</a>
+                        <a href="{% url 'order:checkout' %}" class="btn btn-primary">Checkout</a>
                         </p>
                     {% endif %}
             </div>

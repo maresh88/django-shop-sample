@@ -11,6 +11,7 @@ urlpatterns = [
     # apps
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls', namespace='cart')),
+    path('order/', include('order.urls', namespace='order')),
     path('', include('shop.urls', namespace='shop')),
 
     # debug toolbar
