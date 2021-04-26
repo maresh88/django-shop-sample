@@ -58,13 +58,35 @@
                             {% endwith %}
                         {% endfor %}
 
+                        {% if cart.coupon %}
+
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <div class="text-success">
+                                    <h6 class="my-0">Promo code</h6>
+                                    <small>{{ cart.coupon.code }}</small>
+                                </div>
+                                <span class="text-success">-${{ cart.get_discount|floatformat:2 }}</span>
+                            </li>
+                        {% endif %}
+
 
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Total (USD)</span>
-                            <strong>${{ cart.get_total_price|floatformat:2 }}</strong>
+                            <strong>${{ cart.get_total_price_after_discount|floatformat:2 }}</strong>
                         </li>
 
                     </ul>
+
+                    <form class="card p-2" action="{% url 'coupon:apply' %}" method='post'>
+                        <div class="input-group">
+                            {{ form_coupon.code }}
+                            {% csrf_token %}
+                            {% comment %} <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ form_coupon.code }}"> {% endcomment %}
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">Redeem</button>
+                            </div>
+                        </div>
+                    </form>
 
                     <!-- Cart -->
 
