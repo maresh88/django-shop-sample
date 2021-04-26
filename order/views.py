@@ -25,5 +25,5 @@ class CheckoutFormView(LoginRequiredMixin, FormView):
                                          quantity=item['quantity'])
             cart.clear()
             self.request.session['order_id'] = order.id
-            return redirect('/')
+            return redirect('payment:process')
         return redirect('orders:checkout')

@@ -1,5 +1,9 @@
 import os
 from pathlib import Path
+import braintree
+
+from .utils import get_secret_data
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '38_x7w8j%5u9pt_ub%3__%hes_*@)u(6#lre@ib8$4r!*%#97e'
+SECRET_KEY = get_secret_data('SECRET KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
     'shop',
     'cart',
     'order',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +159,15 @@ LOGOUT_URL = 'account_logout'
 
 # crispy form settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#braintree settings
+BRAINTREE_MERCHANT_ID = get_secret_data('BRAINTREE_MERCHANT_ID')  # Merchant ID
+BRAINTREE_PUBLIC_KEY = get_secret_data('BRAINTREE_PUBLIC_KEY')   # Public Key
+BRAINTREE_PRIVATE_KEY = get_secret_data('BRAINTREE_PRIVATE_KEY')  # Private key
+
+BRAINTREE_CONF = braintree.Configuration(
+    braintree.Environment.Sandbox,
+    BRAINTREE_MERCHANT_ID,
+    BRAINTREE_PUBLIC_KEY,
+    BRAINTREE_PRIVATE_KEY
+)
