@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'easy_thumbnails',
     'crispy_forms',
+    'rest_framework',
 
     # allauth
     'django.contrib.sites',
@@ -172,3 +173,10 @@ BRAINTREE_CONF = braintree.Configuration(
     BRAINTREE_PUBLIC_KEY,
     BRAINTREE_PRIVATE_KEY
 )
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

@@ -18,6 +18,10 @@ urlpatterns = [
 
     # debug toolbar
     path('__debug__/', include(debug_toolbar.urls)),
+
+    # rest framework
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('shop.api.urls', namespace='api')),
 ]
 
 if settings.DEBUG:
