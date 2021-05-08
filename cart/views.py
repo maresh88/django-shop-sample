@@ -11,7 +11,6 @@ from shop.models import Product
 class CartAdd(View):
     def post(self, request):
         body_data = json.loads(request.body.decode('utf-8'))
-        print(body_data)
         cart = Cart(request)
         product = get_object_or_404(Product, id=body_data.get('product_id'))
         cart.add(product=product)
