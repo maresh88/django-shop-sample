@@ -21,3 +21,21 @@ services:
       - ./.env.db
     container_name: postgres_db
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+
+  celery:
+    build:
+      context: .
+    command: celery -A config worker -l INFO
+    volumes:
+      - .:/app
+    container_name: celery
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+      - app
+

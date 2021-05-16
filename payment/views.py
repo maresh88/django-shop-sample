@@ -5,8 +5,11 @@ from django.views.generic import TemplateView
 
 from config import settings
 from order.models import Order
+from order.tasks import send_mail_with_order
 
 gateway = braintree.BraintreeGateway(settings.BRAINTREE_CONF)
+
+r = settings.R
 
 
 class PaymentView(View):
@@ -34,9 +37,16 @@ class PaymentView(View):
         })
         if result.is_success:
             product_ids = self.order.items.values_list('product_id', flat=True)
+            for product_id in product_ids:
+                r.incr(f'product:{product_id}:num_of_purchases')
             self.order.paid = True
             self.order.braintree_id = result.transaction.id
             self.order.save()
+
+            # sending email
+            if self.order.user.email:
+                send_mail_with_order.delay(self.order.id)
+
             if request.session.get('coupon_id'):
                 del request.session['coupon_id']
             return redirect('payment:done')

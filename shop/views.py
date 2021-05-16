@@ -1,7 +1,10 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.conf import settings
 
 from .models import Category, Product
+
+r = settings.R
 
 
 class AvailabilityMixin:
@@ -25,6 +28,12 @@ class ProductDetailView(AvailabilityMixin, DetailView):
     model = Product
     template_name = 'shop/product_detail.html'
     context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_product_purchases'] = r.get(
+            f'product:{self.get_object().id}:num_of_purchases')
+        return context
 
 
 class ProductsByCategory(HomePageView):

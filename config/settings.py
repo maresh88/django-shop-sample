@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import braintree
+import redis
 
 from .utils import get_secret_data
 
@@ -15,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG'))
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -191,3 +192,22 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# REDIS settings
+REDIS_HOST = 'redis'
+REDIS_PORT = 6379
+REDIS_DB = 0
+
+R = redis.Redis(host=REDIS_HOST,
+                port=REDIS_PORT,
+                db=REDIS_DB)
+
+# EMAIL sending configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'

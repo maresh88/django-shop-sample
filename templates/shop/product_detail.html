@@ -56,6 +56,9 @@
                                 <i class="fas fa-shopping-cart ml-1"></i>
                             </button>
                         {% endif %}
+                        <div class="mt-3">
+                            <i class="fas fa-shopping-cart pr-1" data-toggle="tooltip" title="total purchases"></i>{{ total_product_purchases|add:"0" }}
+                        </div>
                     </div>
                     <!--Content-->
                 </div>
@@ -140,5 +143,9 @@
                 })
                 .catch(err => console.log(err))
         }
+
+        $(document).ready(function () {
+            $("[data-toggle=tooltip]").tooltip({ placement: 'bottom'});
+        })
     </script>
 {% endblock %}
