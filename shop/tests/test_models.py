@@ -18,7 +18,7 @@ class TestCategoryModel(TestCase):
 class TestProductModel(TestCase):
 
     def setUp(self):
-        user = self.make_user('user')
+        self.user = self.make_user('user')
         category = Category.objects.create(name='test', slug='test')
         self.dummy_product = Product.objects.create(
             category=category,
@@ -27,7 +27,7 @@ class TestProductModel(TestCase):
             price='10',
             discount_price='9.99',
             description='',
-            created_by=user,
+            created_by=self.user,
         )
 
     def test_product_model_creation(self):
