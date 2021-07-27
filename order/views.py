@@ -1,11 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 
 from cart.cart import Cart
 from coupon.forms import CouponApplyForm
 from order.forms import OrderCreateForm
-from order.models import OrderItem
+from order.models import OrderItem, Order
 
 
 class CheckoutFormView(LoginRequiredMixin, FormView):
@@ -36,3 +36,13 @@ class CheckoutFormView(LoginRequiredMixin, FormView):
             self.request.session['order_id'] = order.id
             return redirect('payment:process')
         return redirect('order:checkout')
+
+
+class OrderHistoryView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'order/order_history.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        return super(OrderHistoryView, self).get_queryset().filter(user=self.request.user).order_by(
+            '-id').prefetch_related('items', 'items__product')

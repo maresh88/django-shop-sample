@@ -16,8 +16,7 @@ urlpatterns = [
     path('coupon/', include('coupon.urls', namespace='coupon')),
     path('', include('shop.urls', namespace='shop')),
 
-    # debug toolbar
-    path('__debug__/', include(debug_toolbar.urls)),
+
 
     # rest framework
     path('api-auth/', include('rest_framework.urls')),
@@ -26,3 +25,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    # debug toolbar
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
